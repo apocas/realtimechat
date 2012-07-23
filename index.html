@@ -1,0 +1,95 @@
+<html>
+
+    <head>
+        <title>realtimeCHAT</title>
+        <link type="text/css" rel="stylesheet" href="style.css" />
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="css/jquery.jgrowl.css" rel="stylesheet">
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/jquery.jgrowl.js"></script>
+        <script src="js/client.js"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">realtimeCHAT</a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            
+            <div id="content" style="display:none;width:100%;">
+                <div id="content_chat" class="boxes txt_box">
+                    <ul class="messages"></ul>
+                </div>
+                <div id="content_list" class="boxes user_box">
+                    <ul class="lusers"></ul>
+                </div>
+            </div>
+
+            <div class="modal hide" id="userModal">
+                
+                <div class="modal-header">
+                    <h3>realtimeCHAT</h3>
+                </div>
+                
+                <div class="modal-body">
+                    <div id="lform">
+                        <form id="form_user" class="form-horizontal">
+                            <fieldset>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <div class="input-prepend">
+                                            <span class="add-on"><i class="icon-user"></i></span>
+                                            <input type="text" placeholder="username" id="usernameTxt" name="usernameTxt" style="height: 28px;margin-left: -4;" maxlength=15 />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <div class="input-prepend">
+                                            <span class="add-on"><i class="icon-cog"></i></span>
+                                            <input type="password"  placeholder="password" id="passwordTxt" name="passwordTxt" style="height: 28px;margin-left: -4;"  />
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    
+                    <div id="lloading" style="display:none;width:100%;text-align: center;">
+                        <div id="loadingdiv" style="width: 100%;height: 32px;"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="text-align:center">
+                    <button id="enterBtn" name="enterBtn" class="btn btn-large btn-success" data-loading-text="Connecting..." style="width:200px">Enter</button>
+                </div>
+                
+            </div>
+            
+            <div id="sendChat" style="display:none;width:100%;margin-top:20px;">
+                <form id="form_txt" class="form-inline">
+                    <input type="text" name="chatTxt" class="input-large" style="width:80%;" />
+                    <input type="button" name="sendBtn" value="Send" class="btn btn-primary" style="width:19%;" />
+                </form>
+            </div>
+
+        </div>
+    </body>
+
+</html>
