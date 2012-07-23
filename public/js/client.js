@@ -28,17 +28,23 @@ $(document).ready(function() {
 
     socket.on('msg', function(message) {
         $(".messages").append("<li><span class='tag'>(" + message.time + ") " + message.name + " said </span><span class='txt_txt'>" + message.msg.linkify() + "</span></li>");
-        
+        $(".messages").scrollTop($(".messages")[0].scrollHeight);
+    });
+    
+    socket.on('history', function(message) {
+        $(".messages").append("<li class='history'><span class='tag'>(" + message.time + ") " + message.name + " said </span><span class='txt_txt'>" + message.msg.linkify() + "</span></li>");
         $(".messages").scrollTop($(".messages")[0].scrollHeight);
     });
                 
                 
     socket.on('add', function(message) {
+        $(".messages").append("<li><span class='tag' style='color:#009900;'>(" + currentTime() + ") " + message + " just entered");
         $('.lusers').append("<li name='" + message + "'><span class='user_icon'></span><span class='user_txt'>" + message + "</span></li>");
     });
                 
                 
     socket.on('remove', function(message) {
+        $(".messages").append("<li><span class='tag' style='color:#900000;'>(" + currentTime() + ") " + message + " leaved.");
         $('[name="' + message + '"]').remove();
     });
                  
@@ -125,4 +131,13 @@ if(!String.linkify) {
         .replace(pseudoUrlPattern, '$1<a href="http://$2" target="_blank">$2</a>')
         .replace(emailAddressPattern, '<a href="mailto:$&" target="_blank">$&</a>');
     };
+}
+
+function currentTime() {
+    var objToday = new Date(),
+    curHour = objToday.getHours() > 12 ? objToday.getHours() - 12 : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours()),
+    curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes(),
+    curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds();
+    var now = curHour + ":" + curMinute + ":" + curSeconds;
+    return now;
 }

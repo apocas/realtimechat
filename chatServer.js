@@ -4,6 +4,11 @@ var socket = require('socket.io')
 var express = require('express')
 , http = require('http');
 
+var _ = require("underscore");
+
+var redis = require("redis");
+rclient = redis.createClient();
+
 var app = express();
 
 app.configure(function() {
@@ -90,6 +95,31 @@ io.sockets.on('connection', function (client) {
             clients.push(new Client(msg, client));
             client.emit("success");
             broadcast("add", msg);
+            
+            rclient.zrange('chat', -5, -1, 'withscores', function(err, members) {
+                var lists=_.groupBy(members, function(a,b) {
+                    return Math.floor(b/2);
+                });
+                
+                var arrayx = _.toArray(lists);
+                
+                for(var i = 0; i<arrayx.length;i++){
+                    var date = new Date();
+                    date.setTime(arrayx[i][1]);
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    
+                    var arr_from_json = JSON.parse(arrayx[i][0]);
+                    
+                    client.emit("history",{
+                        name: arr_from_json.name, 
+                        msg: arr_from_json.msg,
+                        time: hours + ':' + minutes + ':' + seconds
+                    });
+                }
+            });
+
         } else {
             client.emit("errorc","Username already exists!");
         }
@@ -110,6 +140,8 @@ io.sockets.on('connection', function (client) {
                 }
             }
         }
+        
+        rclient.zadd("chat",Math.round(new Date().getTime()),JSON.stringify(msg));
         
         broadcast("msg", {
             name: msg.name, 
