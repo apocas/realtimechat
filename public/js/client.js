@@ -1,3 +1,14 @@
+
+soundManager.onload = function() {
+    sound = soundManager.createSound({
+        id:'mySound1',
+        url:'./sound/sound.wav',
+        onfinish:function() {
+            soundManager._writeDebug(this.sID+' finished playing');
+        }
+    });
+}
+
 $(document).ready(function() {
     
     $('#userModal').modal({
@@ -27,8 +38,12 @@ $(document).ready(function() {
     });
 
     socket.on('msg', function(message) {
-        $(".messages").append("<li><span class='tag'>(" + message.time + ") " + message.name + " said </span><span class='txt_txt'>" + message.msg.linkify() + "</span></li>");
+        $(".messages").append("<li><span class='tag'>(" + message.time + ") " + message.name + ": </span><span class='txt_txt'>" + message.msg.linkify() + "</span></li>");
         $(".messages").scrollTop($(".messages")[0].scrollHeight);
+        
+        sound.play({
+            volume:35
+        });
     });
     
     socket.on('history', function(message) {
@@ -38,7 +53,7 @@ $(document).ready(function() {
                 
                 
     socket.on('add', function(message) {
-        $(".messages").append("<li><span class='tag' style='color:#009900;'>(" + currentTime() + ") " + message + " just entered");
+        $(".messages").append("<li><span class='tag' style='color:#009900;'>(" + currentTime() + ") " + message + " entered.");
         $('.lusers').append("<li name='" + message + "'><span class='user_icon'></span><span class='user_txt'>" + message + "</span></li>");
     });
                 
@@ -85,23 +100,33 @@ $(document).ready(function() {
             header: '<i class="icon-flag icon-white"></i> ERROR!',
             sticky: true
         });
+        
+        $('#lform').show();
+        $('#lloading').hide();
+        $('#enterBtn').button('reset');
     });
            
     $('#form_user').submit(function() {
         if($('input[name=usernameTxt]').val() != ""){
-            username = $('input[name=usernameTxt]').val();
-            socket.emit('enter', username);
+            username = $('input[name=usernameTxt]').val().split(' ').join('');
+            password = $('input[name=passwordTxt]').val();
+            socket.emit('enter', {
+                name: username,
+                password: password
+            });
         }
         return false;
     });
            
     $('#form_txt').submit(function() {
-        socket.emit('send', {
-            name: username, 
-            msg: $("input[name=chatTxt]").val()
-        });
+        if($("input[name=chatTxt]").val().length > 0){
+            socket.emit('send', {
+                name: username, 
+                msg: $("input[name=chatTxt]").val()
+            });
             
-        $("input[name=chatTxt]").val("");
+            $("input[name=chatTxt]").val("");
+        }
         return false;
     });
                 
@@ -116,14 +141,8 @@ function resizeDivs() {
 
 if(!String.linkify) {
     String.prototype.linkify = function() {
-
-        // http://, https://, ftp://
         var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-
-        // www. sans http:// or https://
         var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-
-        // Email addresses
         var emailAddressPattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim;
 
         return this

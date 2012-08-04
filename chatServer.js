@@ -15,12 +15,8 @@ app.configure(function() {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.logger());
-    app.use(express.cookieParser());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.session({
-        secret: 'keyboard cat'
-    }));
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
 });
@@ -91,37 +87,42 @@ io.sockets.on('connection', function (client) {
     });
     
     client.on('enter', function(msg) {
-        if(getClientByName(msg) == null){
-            clients.push(new Client(msg, client));
-            client.emit("success");
-            broadcast("add", msg);
+        if(msg.password == "password"){
+            if(getClientByName(msg.name) == null){
+                clients.push(new Client(msg.name, client));
             
-            rclient.zrange('chat', -5, -1, 'withscores', function(err, members) {
-                var lists=_.groupBy(members, function(a,b) {
-                    return Math.floor(b/2);
-                });
-                
-                var arrayx = _.toArray(lists);
-                
-                for(var i = 0; i<arrayx.length;i++){
-                    var date = new Date();
-                    date.setTime(arrayx[i][1]);
-                    var hours = date.getHours();
-                    var minutes = date.getMinutes();
-                    var seconds = date.getSeconds();
-                    
-                    var arr_from_json = JSON.parse(arrayx[i][0]);
-                    
-                    client.emit("history",{
-                        name: arr_from_json.name, 
-                        msg: arr_from_json.msg,
-                        time: hours + ':' + minutes + ':' + seconds
+                client.emit("success");
+                broadcast("add", msg.name);
+            
+                rclient.zrange('chat', -15, -1, 'withscores', function(err, members) {
+                    var lists=_.groupBy(members, function(a,b) {
+                        return Math.floor(b/2);
                     });
-                }
-            });
+                
+                    var arrayx = _.toArray(lists);
+                
+                    for(var i = 0; i<arrayx.length;i++){
+                        var date = new Date();
+                        date.setTime(arrayx[i][1]);
+                        var hours = date.getHours();
+                        var minutes = date.getMinutes();
+                        var seconds = date.getSeconds();
+                    
+                        var arr_from_json = JSON.parse(arrayx[i][0]);
+                    
+                        client.emit("history",{
+                            name: arr_from_json.name, 
+                            msg: arr_from_json.msg,
+                            time: hours + ':' + minutes + ':' + seconds
+                        });
+                    }
+                });
 
+            } else {
+                client.emit("errorc","Username already exists!");
+            }
         } else {
-            client.emit("errorc","Username already exists!");
+            client.emit("errorc","Wrong password!");
         }
     });
     
@@ -152,7 +153,10 @@ io.sockets.on('connection', function (client) {
     });
     
     client.on('disconnect', function() {
-        broadcast("remove", getClientName(client));
+        var cc = getClientName(client);
+        if(cc != null){
+            broadcast("remove", getClientName(client));
+        }
         removeClient(client);
     });
 

@@ -19,7 +19,7 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     list-style: none;
     -webkit-perspective: 400px;
     -moz-perspective: 400px;
@@ -57,14 +57,14 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     list-style: none;
     -webkit-perspective: 400px;
     -moz-perspective: 400px;
     -ms-perspective: 400px;
     -o-perspective: 400px;
     perspective: 400px;
-    padding-left: 10px;
+    padding-left: 5px;
 }
 
 .lusers li {
@@ -112,7 +112,7 @@
     box-shadow: inset 0 0 5px black;
     float:left;
     margin-left: 5px;
-    width: 19%;
+    width: 18%;
     height: 100%;
 }
 
