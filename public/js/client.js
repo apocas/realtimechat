@@ -18,7 +18,7 @@ $(document).ready(function() {
     
     var username = "anonymous";
     var content = $('#content_chat');
-    var socket = new io.connect('http://localhost:88');
+    var socket = new io.connect();
     
     $.jGrowl("Connecting...", {
         header: '<i class="icon-flag icon-white"></i> Info'

@@ -7,7 +7,7 @@
 */
 
 #loadingdiv {
-    background: url('img/loading.gif');
+    background: url('../img/loading.gif');
     background-position: center center;
     background-repeat: no-repeat;
 }
@@ -99,7 +99,7 @@
     -moz-box-shadow: inset 0 0 10px #000000;
     -webkit-box-shadow: inset 0 0 10px black;
     box-shadow: inset 0 0 10px black;
-    background-image: url("img/bgnoise.gif");
+    background-image: url("../img/bgnoise.gif");
 
     float:left;
     width: 80%;
@@ -117,7 +117,7 @@
 }
 
 .user_icon {
-    background: url('img/man.png');
+    background: url('../img/man.png');
     height: 16px;
     width: 16px;
     display: inline-block;
@@ -126,7 +126,7 @@
 
 body {
     padding-top: 60px;
-    background: url('img/content-bg.png');
+    background: url('../img/content-bg.png');
 }
 
 .tag {
