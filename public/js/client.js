@@ -1,7 +1,7 @@
 
 soundManager.onload = function() {
     sound = soundManager.createSound({
-        id:'mySound1',
+        id:'sound1',
         url:'./sound/sound.wav',
         onfinish:function() {
             soundManager._writeDebug(this.sID+' finished playing');
@@ -18,7 +18,7 @@ $(document).ready(function() {
     
     var username = "anonymous";
     var content = $('#content_chat');
-    var socket = new io.connect('http://skynet.ptisp.pt:88');
+    var socket = new io.connect('http://localhost:88');
     
     $.jGrowl("Connecting...", {
         header: '<i class="icon-flag icon-white"></i> Info'
