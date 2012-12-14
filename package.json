@@ -15,7 +15,8 @@
     "redis": ">= 0.8.2",
     "connect-redis": ">= 1.4.5",
     "express": ">= 3.0.2",
-    "socket.io": ">= 0.9.11"
+    "socket.io": ">= 0.9.11",
+    "underscore": ">= 1.4.3"
   },
   "main": "./app.js",
   "engines": {
